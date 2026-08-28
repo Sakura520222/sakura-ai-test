@@ -12,6 +12,25 @@ This project is specifically created for testing and demonstrating the capabilit
 *   **全栈专家**: 集成了 Agent 专家的多技能调用和自主决策能力。
 *   **双语支持**: 提供中文和英文的双重文档说明。
 
+## 💬 关于 Ciallo (About "Ciallo")
+
+本项目运行时会输出问候语 `Ciallo～(∠・ω< )⌒☆`。
+
+**含义 (Meaning)**
+"Ciallo" 是意大利语问候语 **ciao**（你好）与英语 **hello**（哈喽）的合成词，本身就是一个打招呼的问候语。
+
+"**Ciallo**" is a blend of the Italian greeting **ciao** and the English **hello**. It is simply a way of saying hello.
+
+**出处 (Origin)**
+该词最早出自日本游戏公司 **柚子社（Yuzusoft）** 于 2015 年发行的游戏《**魔女的夜宴**》（サノバウィッチ / Sabbat of the Witch）中角色 **因幡巡（Inaba Meguru）** 自创的打招呼口头禅。受其影响，同作的其他角色以及柚子社后续作品（《千恋*万花》、《Riddle Joker》、《天使☆騒々》等）的角色也相继使用。
+
+It originates from the catchphrase of **Inaba Meguru**, a character in Yuzusoft's 2015 visual novel *Sabbat of the Witch* (サノバウィッチ). Characters in later Yuzusoft titles also picked it up.
+
+**传播 (Spread)**
+如今 "Ciallo～(∠・ω< )⌒☆" 已成为 Galgame 圈的知名迷因：粉丝常在视频评论区以输入 "Ciallo～" 的方式互相问候，衍生出"柚子厨"等圈内称呼。
+
+Today, "Ciallo～(∠・ω< )⌒☆" is a well-known meme in the Galgame community: fans greet each other by typing "Ciallo～" in comment sections.
+
 ## 🚀 如何使用 (How to Use)
 
 ### 安装依赖 (Installation)
