@@ -1,0 +1,9 @@
+[project]
+name = "sakura-ai-test"
+version = "0.1.0"
+description = "Sakura-AI 智能代理能力测试与演示项目（实验性仓库）"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pytest>=7.0.0",
+]

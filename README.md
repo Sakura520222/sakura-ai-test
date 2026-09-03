@@ -34,27 +34,30 @@ Today, "Ciallo～(∠・ω< )⌒☆" is a well-known meme in the Galgame communi
 ## 🚀 如何使用 (How to Use)
 
 ### 安装依赖 (Installation)
-首先克隆仓库，然后安装所需的 Python 包：
+本项目推荐使用 [uv](https://docs.astral.sh/uv/) 进行依赖管理（已在 uv 0.4.30 与 0.12.9 上验证，安装 uv 请参考 [官方文档](https://docs.astral.sh/uv/getting-started/installation/)）。
+克隆仓库后，使用一条命令即可创建虚拟环境并安装锁定版本的依赖：
 ```bash
 git clone https://github.com/Sakura520222/sakura-ai-test.git
 cd sakura-ai-test
-pip install -r requirements.txt # 假设有一个 requirements.txt 文件
+uv sync
 ```
+
+如果你更习惯使用 pip，仍可以继续使用传统的 `pip install -r requirements.txt` 方式安装依赖。
 
 ### 运行项目 (Run Project)
 根据您的需求选择以下方式运行：
 
 **1. 运行测试 (Run Tests)**
-使用 `pytest` 命令来执行所有单元和集成测试。
+使用 `uv run` 自动在项目虚拟环境中执行 `pytest`：
 ```bash
-pytest -v
+uv run pytest -v
 ```
 
 **2. 启动主应用 (Start Main Application)**
-如果项目包含一个主入口点（例如 `main.py`），您可以使用以下命令启动它：
+项目主入口为 `main.py`，使用以下命令启动：
 ```bash
-python main.py
-# 或者使用其他启动命令，如: python app/runner.py
+uv run python main.py
+# 或者手动激活虚拟环境后运行: python main.py
 ```
 
 ## 🤝 贡献指南 (Contribution Guide)
@@ -72,7 +75,9 @@ python main.py
 *   `/src`: 存放核心业务逻辑代码。
 *   `/tests`: 存放所有测试用例。
 *   `README.md`: 本文件，项目概览和使用指南。
-*   `requirements.txt`: 项目依赖列表。
+*   `pyproject.toml`: 项目元数据与依赖声明（uv 兼容）。
+*   `uv.lock`: uv 锁定的依赖版本，保证可复现安装。
+*   `requirements.txt`: pip 传统依赖列表（与 pyproject.toml 保持同步）。
 
 ---
 *Created for Issue #2: [documentation][low] 添加项目 README（双语）*

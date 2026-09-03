@@ -6,11 +6,12 @@
 
 以下为本仓库中常用命令：
 
-- **运行主程序**：`python main.py`
-- **安装依赖**：`pip install -r requirements.txt`（如配置了依赖文件）
-- **运行测试**：`pytest`（如存在测试目录）
-- **代码检查**：`pylint` 或 `flake8`（如已配置）
+- **运行主程序**：`uv run python main.py`（或激活虚拟环境后 `python main.py`）
+- **安装依赖**：`uv sync`（使用 uv，推荐；或 `pip install -r requirements.txt`）
+- **运行测试**：`uv run pytest`（或直接 `pytest`；当前仓库尚无 `tests/` 目录）
+- **代码检查**：`ruff check .`（如已安装）
 - **构建**：本 Python 测试仓库无需构建步骤
+- **依赖管理**：项目依赖以根目录 `pyproject.toml` 为准，锁定版本见 `uv.lock`；更新依赖后运行 `uv lock` 与 `uv sync`
 
 ## 架构与结构
 
