@@ -1,40 +1,40 @@
 # 项目概述文档 - sakura-ai-test
 
 ## 1. 项目简介
-专门为测试和演示 Sakura-AI 智能代理能力而创建的实验性项目，验证 AI 在不同场景下的表现、功能实现和交互流程。支持双语文档，目前处于早期阶段，已建立基础的 Issue 测试流程。
+本项目是专门为测试和演示 Sakura-AI 智能代理（Sakura Agent）能力而创建的实验性项目，验证 AI 在不同场景下的表现、功能实现和交互流程。支持中英双语文档，具备 CLI 交互、游戏玩法模块及基础测试与 Issue 处理流程。
 
 ## 2. 技术栈
-- **主要语言**：Python
-- **测试框架**：pytest
-- **核心文件**：main.py（当前仅包含简单打印输出）、requirements.txt
+- **核心语言**：Python 3.x（内置标准库 `argparse`）
+- **依赖与包管理**：`uv`（推荐，配置文件 `pyproject.toml` + `uv.lock`）、`pip`（`requirements.txt` 同步维持兼容）
+- **代码规范与测试**：`pytest`（测试框架）、`ruff`（代码检查/格式化工具）
+- **核心入口**：`main.py`、`src/cli.py`（控制台 CLI 入口）
 
 ## 3. 项目结构
-- `/src`：核心业务逻辑代码（规划中）
-- `/tests`：测试用例目录（已配置 pytest）
+- `/src`：核心业务逻辑代码（`cli.py` 控制台命令行接口，`games.py` 迷你游戏逻辑）
+- `/tests`：测试用例目录（已配置 pytest，测试覆盖率良好）
 - `README.md`：项目说明文档（中英双语）
-- `requirements.txt`：依赖列表（仅含 pytest）
-- `.sakura/`：项目知识库与反思记录
+- `pyproject.toml` / `uv.lock` / `requirements.txt`：包管理与依赖配置
+- `.sakura/`：项目知识库与审查反思记录
 
-## 4. 开发约定
-- **Issue 管理**：建立标签体系（invalid、documentation、enhancement），对占位类 Issue 使用 `invalid` 快速关闭
-- **标题规范**：建议采用 `[type][priority] 描述` 格式，提升可读性
-- **重复检测**：对低信息量 Issue 使用关键词匹配，如 "测试"、"占位"、"test"
-- **编码规范**：涉及特殊字符输出需确保 UTF-8 编码，注意 lint 检查
+## 4. 开发与命令行交互规范
+- **Issue 管理**：
+  - 建立标签体系（`documentation`、`enhancement`、`invalid`、`placeholder`），区分纯测试占位与真实需求。
+  - 统一标题规范：`[type][priority] 描述`。
+  - 自动化与重复检测：使用关键词（"测试"、"占位"、"test"）及作者/时间维进行极简 Issue 快速筛选与关单。
+- **CLI 与终端交互规范**：
+  - **入口可测试性**：CLI 入口函数必须支持可选参数传递（如 `def run(argv=None)`），解耦 `sys.argv`，便于高效测试。
+  - **终端编码防御**：针对非 ASCII（中文/Emoji）控制台输出，封装 `_safe_print` 并提供 `try-except UnicodeEncodeError` 降级，或提供 `--ascii-only` 开关以兼容 Windows GBK/cp936 环境。
+  - **入口与架构隔离**：`console_scripts` 入口模块必须包含 `if __name__ == "__main__":` 保护；CLI 接入层使用桥接/代理模式，仅作参数分发，业务逻辑全量复用或委派给对应业务模块。
 
-## 5. 审查规范（新增）
-- **副作用阻断规则**：若修改包含顶层执行逻辑（如 print、数据库连接）的文件，必须评估 `if __name__ == "__main__":` 封装的必要性
-- **编码兼容性检查**：涉及非 ASCII 输出的 print 语句必须包含 `try/except UnicodeEncodeError` 处理，或封装为 `safe_print` 工具函数
-- **截图内容强验证**：Issue 仅含截图（特别是外部平台截图）时，必须强制进行代码库关键词检索，确认是否为本项目产生
-- **CI/环境敏感度**：审查涉及 I/O 操作的代码时，需考虑实际运行环境（如 Windows GBK），不能仅假设 UTF-8 环境
+## 5. 审查规范
+- **副作用与入口保护**：修改包含顶层执行逻辑的文件时，必须评估 `if __name__ == "__main__":` 隔离保护。
+- **依赖与锁文件联动**：修改 `pyproject.toml` 依赖声明时，必须同时运行 `uv lock` 更新 `uv.lock`，并在多依赖源（`requirements.txt`）间保持交叉同步。
+- **编码与 CI 环境兼容**：评估 I/O 操作时不能假定纯 UTF-8，须对 Windows GBK 等环境做防爆破降级处理。
+- **同类缺陷横向扫描**：修复/改进某一配置或工具声明时，需扫描项目中是否存在同类路径（如 pip 备用路径）漏掉更新。
 
 ## 6. 关键经验教训
-- Issue 分析前需通过搜索确认代码实际结构，避免误判
-- 建立标签字典保持一致性（如 documentation → docs），统一使用 `invalid` 而非 `wontfix` 处理占位 Issue
-- 极小改动也需评估编码、lint、CI 风险，尤其是特殊字符输出
-- 重复检测需人工核对，防止误报/漏报
-- 置信度需与分析结论逻辑闭环：若否定某分类，对应置信度应接近 0
-- 极简仓库中，任何复杂业务逻辑 Issue 应优先按无效/关联错误处理
-- 建议创建 Issue 模板和占位 Issue 处理流程，引入自动化过滤规则
-- 定期审计 low/invalid Issue，保持列表清洁度
+- 极小变动亦需评估编码、lint、CI 风险；涉及 CLI 与输出 print 时需将编码容错列为标准 Checklist。
+- 依赖及配置修改切勿导致锁文件漂移，文档推荐工具应与项目依赖版本同步维护。
+- 置信度评估需与分析结论逻辑闭环；针对灰色占位 Issue，应建立条件分支机制（如超时无响应自动关单）。
 
 累计反思 5 次
