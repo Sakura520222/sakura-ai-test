@@ -2,44 +2,28 @@
 
 累计反思 5 次
 
-## 标签体系规范
-- 优先检查仓库现有标签列表，避免孤立标签
-- 统一使用 `invalid` 标记无效占位，`wontfix` 用于已知缺陷不修复
-- 可建立 `test`、`placeholder`、`trivial`、`chore` 等细分标签
-- 建立「标签字典」自动映射（如 `documentation → docs`）保持一致性
-- 避免将 `invalid` 与 `wontfix` 混用，两者语义不同
+## 标签体系与 Issue 管理
+- 优先检查仓库现有标签，统一使用 `invalid` 标记无效/非需求，`wontfix` 用于已知缺陷不修复
+- 可建立 `placeholder`、`test`、`trivial` 等标签；`invalid` 与 `wontfix`/`enhancement` 等语义互斥，不可混用
+- 占位/测试 Issue 统一规范：分类 `other` + 优先级 `low` + 标签 `invalid`（或 `placeholder`）
+- 在 Issue 模板提供 `placeholder` / 测试选项，极简标题/单字 Issue 设自动过滤规则
+- 定期审查 low/invalid Issue；关闭时添加标准注释（如“仅为测试占位，无实际需求”）
+- 标题前缀遵守 `[type][priority]` 规范（若项目统一采用），无意义标题（如 "cs"）须重构改写
 
-## 占位 Issue 统一管理
-- 快速判定模板：分类 `other` + 优先级 `low` + 标签 `invalid` + 标题 `[other][low] <简要描述>`
-- 在 Issue 模板中加入 `placeholder` 选项，明确标记测试 Issue
-- 对仅含单字或明显测试文字的 Issue，加入自动过滤规则
-- 定期（如每月）审查 low/invalid Issue，保持列表清洁
-- 关闭时添加简短注释（如「仅为测试占位，无实际需求」）便于审计
+## CLI 与终端交互规范
+- CLI 入口函数必须支持接收参数列表（如 `def run(argv=None)`），实现控制层与测试隔离
+- 涉及非 ASCII 输出的 CLI 工具，统一采用 `try/except UnicodeEncodeError` 降级或提供 `--ascii-only` 开关，兼容 Windows GBK 等环境
+- 新增 CLI 命令必须优先复用/委派现有业务模块，防止重构冗余业务逻辑
+- `console_scripts` 入口模块必须使用 `if __name__ == "__main__":` 隔离防护
 
-## 可行性判断要点
-- 分析前先执行 `repo_browser.search` 或 `grep` 确认目标文件实际内容
-- 即便极小改动，也要检查编码（如 UTF-8）、lint、CI 等潜在阻碍
-- 特殊字符输出可能触发编码警告，需确保文件编码正确
-- 若 `main.py` 被 import，额外 `print` 可能在非交互时产生噪声
-- 截图内容需强制代码库关键词检索，确认是否「走错门」
-- 对非 ASCII 输出建议统一使用 `try/except UnicodeEncodeError` 或封装 `safe_print`
+## 可行性判断与改动要点
+- 分析前先执行 `repo_browser.search` 或 `grep` 确认目标文件实际内容与历史变更
+- 特殊字符/print 输出需评估编码风险与 `if __name__ == "__main__":` 封装必要性
+- 在给新手或模糊需求编写建议时，可提供“澄清菜单/选项步骤”降低沟通成本
+- 修改包含顶层执行逻辑的文件时，评估其对外部 import 的影响；频繁变动模块适时启动重构
 
-## 重复检测策略
-- 使用「标题+关键词+关联 PR」多维度比对，必要时手动核对
-- 对低信息量 Issue，使用更宽松的文本相似度阈值
-- 建立关键词列表（如 "test"、"demo"、"流程"）捕获潜在重复
-- 防止将占位 Issue 与实际测试需求误判为重复
+## 重复检测与交叉验证
+- 结合标题、关键词、关联 PR、提交时间及作者多维度比对重复 Issue
+- **依赖与锁文件联动**：修改依赖声明（如 `pyproject.toml`）必须同步更新锁文件（如 `uv.lock`）；提出依赖建议时需提示重新生成锁文件
+- **多途径安装一致性**：若仓库保留 pip 与 uv 等多种依赖安装途径，需扫描多源（如 `requirements.txt` 和 `pyproject.toml`）确保一致
 - 极简仓库中，复杂业务逻辑 Issue 优先按「无效/关联错误」处理
-
-## 标题规范
-- 若仓库采用 `[type][priority]` 前缀，确保所有新 Issue 遵守
-- 若未使用前缀，可保留原标题，避免格式噪声
-- 对无意义标题（如 "cs"、"1"）需改写为清晰描述
-
-## 文档与流程
-- 在 CONTRIBUTING 或 ISSUE_TEMPLATE 中说明测试/占位 Issue 处理方式
-- 对新手友好任务，在 Issue 描述中加入「任务拆解步骤」
-- 双语或特定格式 README，可预留「梗/文化说明」小节模板
-- 关闭时添加简短注释（如「仅为测试占位，无实际需求」）便于审计
-- 若修改包含顶层执行逻辑（如 print）的文件，必须评估 `if __name__ == "__main__":` 封装必要性
-- 遇到核心文件频繁修改时，应适时启动重构子任务强制修复入口结构
