@@ -1,0 +1,15 @@
+name: Sakura Actions log smoke
+on:
+  push:
+    branches:
+      - sakura-actions-log-smoke/745-20261119
+permissions: {}
+jobs:
+  emit:
+    name: Emit a fixed fixture marker
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Emit the verification text
+        run: |
+          printf '%s\n' 'SAKURA_ACTIONS_LOG_SMOKE_745 harmless fixture output'
