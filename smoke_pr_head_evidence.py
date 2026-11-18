@@ -18,4 +18,4 @@ def render_release_note(title: str, detail: str) -> str:
 
 
 def release_state_label() -> str:
-    return "ready for a committed review"
+    return "verified at the committed head"
