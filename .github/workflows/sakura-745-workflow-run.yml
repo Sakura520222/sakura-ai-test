@@ -1,0 +1,27 @@
+name: Sakura 745 Workflow Run
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - '.github/workflows/sakura-745-workflow-run.yml'
+      - 'sakura_ci_745_workflow.py'
+      - 'test_sakura_ci_745_workflow.py'
+permissions:
+  contents: read
+jobs:
+  bounds:
+    if: github.head_ref == 'sakura-745/workflow-run-20261127-01'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check the exact PR head
+        env:
+          FIXTURE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git init --quiet fixture
+          git -C fixture fetch --quiet --depth=1 --no-tags https://github.com/Sakura520222/sakura-ai-test.git "$FIXTURE_SHA"
+          git -C fixture checkout --quiet --detach FETCH_HEAD
+          cd fixture
+          test "$(git rev-parse HEAD)" = "$FIXTURE_SHA"
+          python3 -B -m unittest -v test_sakura_ci_745_workflow
